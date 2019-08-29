@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.owasp:dependency-check-gradle:4.0.2'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '2.1.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'jacoco'
+    id 'org.sonarqube' version '2.7'
+}
+
+apply plugin: 'java'
+apply plugin: 'org.owasp.dependencycheck'
+
+group 'com.siemens.mindsphere.cn.lib'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('lombokVersion', '1.18.6')
+    set('springCloudVersion', "Greenwich.SR2")
+}
+
+dependencies {
+
+    compile(
+            "com.aliyun.fc.runtime:fc-java-core:1.3.0",
+            "org.springframework.cloud:spring-cloud-function-context:2.1.1.RELEASE",
+            "org.springframework:spring-messaging",
+            "org.springframework:spring-web",
+            "com.fasterxml.jackson.core:jackson-databind",
+            "org.springframework.boot:spring-boot-starter",
+            "io.projectreactor:reactor-core",
+            'commons-codec:commons-codec'
+    )
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    testCompile(
+            "org.springframework.boot:spring-boot-starter-test",
+    )
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
